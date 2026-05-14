@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Productos Cloud - Vercel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #222;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      background: #111827;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #374151;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background: #f1f5f9;
+    }
+
+    .delete {
+      background: #dc2626;
+    }
+
+    .delete:hover {
+      background: #b91c1c;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #eef2ff;
+      color: #3730a3;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Aplicación de Productos en la Nube</h1>
+    <p class="subtitle">Arquitectura de dos capas: Vercel + Supabase PostgreSQL</p>
+
+    <div class="badge">Capa 1: Aplicación en Vercel</div>
+    <div class="badge">Capa 2: Base de datos en Supabase</div>
+
+    <form id="productoForm">
+      <input type="text" id="nombre" placeholder="Nombre" required>
+      <input type="text" id="descripcion" placeholder="Descripción">
+      <input type="number" id="precio" placeholder="Precio" step="0.01" required>
+      <input type="number" id="stock" placeholder="Stock" required>
+      <button type="submit">Guardar producto</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="productosBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const API_URL = "/api/productos";
+
+    async function cargarProductos() {
+      const respuesta = await fetch(API_URL);
+      const productos = await respuesta.json();
+
+      const tbody = document.getElementById("productosBody");
+      tbody.innerHTML = "";
+
+      productos.forEach(producto => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+          <td>${producto.id}</td>
+          <td>${producto.nombre}</td>
+          <td>${producto.descripcion || ""}</td>
+          <td>Q ${producto.precio}</td>
+          <td>${producto.stock}</td>
+          <td>
+            <button class="delete" onclick="eliminarProducto(${producto.id})">
+              Eliminar
+            </button>
+          </td>
+        `;
+
+        tbody.appendChild(fila);
+      });
+    }
+
+    async function eliminarProducto(id) {
+      await fetch(`${API_URL}?id=${id}`, {
+        method: "DELETE"
+      });
+
+      cargarProductos();
+    }
+
+    document.getElementById("productoForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const producto = {
+        nombre: document.getElementById("nombre").value,
+        descripcion: document.getElementById("descripcion").value,
+        precio: parseFloat(document.getElementById("precio").value),
+        stock: parseInt(document.getElementById("stock").value)
+      };
+
+      await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(producto)
+      });
+
+      this.reset();
+      cargarProductos();
+    });
+
+    cargarProductos();
+  </script>
+</body>
+</html>
