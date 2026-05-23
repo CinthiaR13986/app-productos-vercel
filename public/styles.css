@@ -1,0 +1,64 @@
+:root{
+  --bg-start:#6d28d9;
+  --bg-end:#7c3aed;
+  --card:#ffffff;
+  --muted:#6b7280;
+  --primary:#111827;
+  --accent:#4f46e5;
+  --danger:#dc2626;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background: linear-gradient(135deg,var(--bg-start),var(--bg-end));
+  color:#0f172a;
+  padding:28px;
+  -webkit-font-smoothing:antialiased;
+}
+
+.container{
+  max-width:980px;
+  margin:0 auto;
+  background:var(--card);
+  padding:26px;
+  border-radius:14px;
+  box-shadow:0 10px 30px rgba(2,6,23,0.15);
+}
+
+h1{margin:0 0 6px 0;font-size:22px}
+.subtitle{margin:0 0 18px 0;color:var(--muted)}
+
+.badges{margin:12px 0}
+.badge{display:inline-block;background:#eef2ff;color:#3730a3;padding:6px 10px;border-radius:999px;font-size:13px;margin-right:8px}
+
+.controls{display:flex;justify-content:flex-end;margin-bottom:12px}
+.controls input{padding:10px 12px;border-radius:8px;border:1px solid #e6e9ee;min-width:220px}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.form-grid input{padding:10px;border:1px solid #e6e9ee;border-radius:8px}
+.form-grid .primary{grid-column:span 2;background:var(--accent);color:white;border:none;padding:10px;border-radius:8px;cursor:pointer;font-weight:600}
+.form-grid .primary:hover{filter:brightness(.95)}
+
+.grid-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.card{background:#fbfdff;border-radius:10px;border:1px solid #eef2ff;display:flex;justify-content:space-between;align-items:center;padding:12px}
+.card-body{flex:1}
+.card-title{font-weight:700;margin-bottom:6px}
+.pill{background:#eef2ff;color:var(--accent);font-weight:600;padding:2px 8px;border-radius:999px;font-size:12px;margin-left:8px}
+.card-desc{color:var(--muted);font-size:13px;margin-bottom:8px}
+.card-meta{font-size:13px;color:#0f172a;opacity:.8}
+.card-actions{margin-left:12px}
+.danger{background:var(--danger);color:white;border:none;padding:8px 10px;border-radius:8px;cursor:pointer}
+.danger:hover{filter:brightness(.9)}
+
+.muted{color:var(--muted);padding:12px}
+
+.toast{position:fixed;right:20px;bottom:20px;background:#0f172a;color:white;padding:10px 14px;border-radius:8px;opacity:0;transform:translateY(8px);transition:all .18s ease;pointer-events:none}
+.toast.visible{opacity:1;transform:none;pointer-events:auto}
+
+@media(max-width:600px){
+  .form-grid{grid-template-columns:1fr}
+  .controls{justify-content:stretch}
+  .controls input{width:100%}
+}
